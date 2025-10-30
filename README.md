@@ -360,7 +360,7 @@ chat-history:
 
 **To disable:** Set `enabled: false` in `chat-history` section
 
-See `CHAT_HISTORY_GUIDE.md` for complete documentation!
+See [docs/guides/CHAT_HISTORY_GUIDE.md](docs/guides/CHAT_HISTORY_GUIDE.md) for complete documentation!
 
 ## 📍 Player Data Context
 
@@ -446,6 +446,24 @@ See `examples/config-custom-prompts.yml` for 12+ pre-made prompt examples!
 - [ ] Integration with other plugins
 - [ ] PlaceholderAPI support
 - [ ] Persistent conversation memory
+
+---
+
+## 📚 Documentation
+
+Additional guides and documentation are available in the `docs/` folder:
+
+### User Guides (`docs/guides/`)
+- **[Setup Guide](docs/guides/SETUP_GUIDE.md)** - Detailed installation and configuration instructions
+- **[Quick Start](docs/guides/QUICK_START.md)** - Get up and running quickly
+- **[Auto-Response Feature](docs/guides/AUTO_RESPONSE_FEATURE.md)** - Complete guide to auto-response functionality
+- **[Chat History Context](docs/guides/CHAT_HISTORY_GUIDE.md)** - Understanding chat history features
+- **[Tab Completion](docs/guides/TAB_COMPLETION_GUIDE.md)** - Command completion guide
+- **[Customization Guide](docs/guides/CUSTOMIZATION_GUIDE.md)** - Customize Grok's personality and behavior
+
+### Development (`docs/development/`)
+- **[Code Analysis Report](docs/development/CODE_ANALYSIS_REPORT.md)** - Code structure and quality analysis
+- **[Player Data Options](docs/development/PLAYER_DATA_OPTIONS.md)** - Player data implementation details
 
 ---
 
