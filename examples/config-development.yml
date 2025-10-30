@@ -1,0 +1,69 @@
+# Development GrokChat Configuration
+# For testing - no limits, full logging
+
+api:
+  key: "your-xai-api-key-here"
+  model: "grok-beta"
+  timeout: 30
+
+chat:
+  enable-mentions: true
+  mention-prefix: "@grok"
+  enable-command: true
+  
+  # Auto-response enabled for testing
+  enable-auto-response: true
+  auto-response-keywords:
+    - "grok"
+    - "hey grok"
+    - "test"
+  auto-response-min-words: 2  # Lower for testing
+  
+  max-message-length: 1000
+  cooldown: 0  # No cooldown for testing
+
+response:
+  max-length: 512
+  color: "YELLOW"
+  prefix: "&e[Grok-DEV]&r "
+  show-thinking: true
+  thinking-message: "&7[DEV] Calling API..."
+
+rate-limit:
+  enabled: false  # No rate limiting in dev
+
+# Chat History - enabled with larger size for testing
+chat-history:
+  enabled: true
+  size: 15  # More history for dev
+  use-in-auto-response: true
+  use-in-direct-mention: true  # Test both modes
+
+# Player Data - enabled for testing
+player-data:
+  enabled: true  # Enabled for dev testing
+  include-position: true
+  include-biome: true
+  include-world: true
+  include-health: true
+  include-experience: true
+  include-held-item: true
+  include-equipment: true
+  include-gamemode: true
+  include-effects: true
+  use-in-auto-response: true  # Test in both modes
+  use-in-direct-mention: true
+
+privacy:
+  log-queries: true  # Log everything
+  share-context: true
+
+advanced:
+  temperature: 0.7
+  max-tokens: 500
+  
+  # Development system prompt
+  system-prompt: "[DEV MODE] You are Grok in development. Include response metadata when helpful. Player: {player}"
+  
+  debug: true  # Full debug logging
+

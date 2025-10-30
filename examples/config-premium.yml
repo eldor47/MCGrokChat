@@ -1,0 +1,72 @@
+# Premium GrokChat Configuration
+# For servers with API budget - maximum features and quality
+
+api:
+  key: "your-xai-api-key-here"
+  model: "grok-beta"
+  timeout: 60  # Generous timeout
+
+chat:
+  enable-mentions: true
+  mention-prefix: "@grok"
+  enable-command: true
+  
+  # Premium auto-response with more keywords
+  enable-auto-response: true
+  auto-response-keywords:
+    - "grok"
+    - "hey grok"
+    - "yo grok"
+    - "grok help"
+    - "ask grok"
+  auto-response-min-words: 3
+  
+  max-message-length: 1000  # Allow longer questions
+  cooldown: 3  # Minimal cooldown
+
+response:
+  max-length: 512  # Longer responses
+  color: "GOLD"
+  prefix: "&6[&bGrok Premium&6]&r "
+  show-thinking: true
+  thinking-message: "&d✨ Grok is processing your request..."
+
+rate-limit:
+  enabled: true
+  max-requests-per-hour: 50  # Generous limit
+
+# Premium Chat History - maximum context
+chat-history:
+  enabled: true
+  size: 15  # More history for better context
+  use-in-auto-response: true
+  use-in-direct-mention: true  # Full context everywhere
+
+# Premium Player Data - full location awareness
+player-data:
+  enabled: true  # Enabled for premium servers
+  include-position: true
+  include-biome: true
+  include-world: true
+  include-health: true
+  include-experience: true
+  include-held-item: true
+  include-equipment: true
+  include-gamemode: true
+  include-effects: true
+  use-in-auto-response: true  # Use everywhere
+  use-in-direct-mention: true
+
+privacy:
+  log-queries: true  # Log for analytics
+  share-context: true  # Better conversations
+
+advanced:
+  temperature: 0.8  # More creative responses
+  max-tokens: 1000  # Longer detailed responses
+  
+  # Premium system prompt - detailed and engaging
+  system-prompt: "You are Grok, a premium AI assistant on this Minecraft server. Provide detailed, helpful, and engaging responses. Be witty and creative while staying accurate. You're helping player: {player}. Make them feel valued!"
+  
+  debug: false
+

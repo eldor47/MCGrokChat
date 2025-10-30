@@ -1,0 +1,71 @@
+# Minimal GrokChat Configuration
+# For basic setups - just set your API key and go!
+
+api:
+  key: "your-xai-api-key-here"
+  model: "grok-beta"
+  endpoint: "https://api.x.ai/v1/chat/completions"
+  timeout: 30
+
+chat:
+  enable-mentions: true
+  mention-prefix: "@grok"
+  enable-command: true
+  
+  # Auto-response feature (joins conversations naturally)
+  enable-auto-response: true
+  auto-response-keywords:
+    - "grok"
+    - "hey grok"
+    - "yo grok"
+  auto-response-min-words: 3
+  
+  max-message-length: 500
+  cooldown: 5
+
+response:
+  max-length: 256
+  color: "AQUA"
+  prefix: "&b[Grok]&r "
+  show-thinking: true
+  thinking-message: "&7Grok is thinking..."
+
+rate-limit:
+  enabled: true
+  max-requests-per-hour: 20
+
+# Chat History Context (helps Grok understand conversations)
+chat-history:
+  enabled: true
+  size: 10
+  use-in-auto-response: true
+  use-in-direct-mention: false
+
+# Player Data Context (optional - helps Grok give location-specific advice)
+player-data:
+  enabled: false  # Disabled by default
+  include-position: true
+  include-biome: true
+  include-world: true
+  include-health: true
+  include-experience: true
+  include-held-item: true
+  include-equipment: true
+  include-gamemode: true
+  include-effects: true
+  use-in-auto-response: false
+  use-in-direct-mention: true
+
+privacy:
+  log-queries: false
+  share-context: false
+
+advanced:
+  temperature: 0.7
+  max-tokens: 500
+  
+  # System prompt (customize Grok's personality)
+  system-prompt: "You are Grok, an AI assistant integrated into a Minecraft server. You're helpful, witty, and concise. Keep responses brief and engaging. You're talking to player: {player}"
+  
+  debug: false
+

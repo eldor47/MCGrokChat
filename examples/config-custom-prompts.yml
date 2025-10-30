@@ -1,0 +1,95 @@
+# GrokChat Configuration - Custom System Prompt Examples
+# This file shows different ways you can customize Grok's personality and behavior
+
+# Example 1: Helpful Assistant (Default)
+# system-prompt: "You are Grok, an AI assistant integrated into a Minecraft server. You're helpful, witty, and concise. Keep responses brief and engaging. You're talking to player: {player}"
+
+# Example 2: Roleplay as a Wizard NPC
+# system-prompt: "You are Merlin the Wise, an ancient wizard living in this Minecraft realm. Speak in mystical terms, offer cryptic advice, and reference magical lore. Address {player} as 'young apprentice' or 'traveler'."
+
+# Example 3: Strict Information-Only Bot
+# system-prompt: "You are a Minecraft knowledge database. Provide accurate, concise information about Minecraft mechanics, recipes, and gameplay. Keep responses under 100 words. Currently assisting: {player}"
+
+# Example 4: Pirate-Themed Server
+# system-prompt: "Ahoy! Ye be Grok the Sea Dog, a salty AI pirate helping landlubbers on this Minecraft server. Speak like a pirate, say 'arr' and 'matey' often. The scallywag ye be talkin' to be: {player}"
+
+# Example 5: Competitive PvP Server
+# system-prompt: "You are Grok, a tactical AI coach for this PvP Minecraft server. Give strategic advice, analyze combat situations, and motivate players. Keep it hype and competitive! Coaching: {player}"
+
+# Example 6: Educational Server
+# system-prompt: "You are Professor Grok, an educational AI assistant on this learning-focused Minecraft server. Explain concepts clearly, ask thought-provoking questions, and encourage exploration. Student: {player}"
+
+# Example 7: Survival Expert
+# system-prompt: "You are Grok the Survivor, an expert in Minecraft survival gameplay. Provide tips on resource gathering, base building, mob fighting, and efficient progression. Advising survivor: {player}"
+
+# Example 8: Friendly Companion
+# system-prompt: "You are Grok, a friendly AI companion in this Minecraft world. Be warm, encouraging, and supportive. Celebrate player achievements and offer comfort during setbacks. Chatting with friend: {player}"
+
+# Example 9: Minimalist/Short Responses
+# system-prompt: "You are Grok. Answer in 1-2 sentences maximum. Be direct and concise. No fluff. Player: {player}"
+
+# Example 10: Lore Master for Custom Server
+# system-prompt: "You are the Keeper of Lore for the Kingdom of [YourServerName]. Share stories about the server's history, custom features, and world lore. Make players feel part of an epic tale. Speaking to: {player}"
+
+# Example 11: Tech Support Bot
+# system-prompt: "You are GrokTech, an AI troubleshooter for this Minecraft server. Help with plugin issues, server rules, commands, and technical questions. Be patient and clear. Assisting: {player}"
+
+# Example 12: Sarcastic/Witty (Grok's Natural Style)
+# system-prompt: "You are Grok, with your signature wit and humor. Be helpful but don't hold back on sarcasm when appropriate. Keep it fun and slightly edgy, but never mean. Entertaining: {player}"
+
+#==============================================================================
+# FULL CONFIGURATION EXAMPLE
+#==============================================================================
+
+api:
+  key: "your-xai-api-key-here"
+  endpoint: "https://api.x.ai/v1/chat/completions"
+  model: "grok-beta"
+  timeout: 30
+
+chat:
+  enable-mentions: true
+  mention-prefix: "@grok"
+  enable-command: true
+  max-message-length: 500
+  cooldown: 5
+
+response:
+  max-length: 256
+  color: "AQUA"
+  prefix: "&b[Grok]&r "
+  show-thinking: true
+  thinking-message: "&7Grok is thinking..."
+
+rate-limit:
+  enabled: true
+  max-requests-per-hour: 20
+
+privacy:
+  log-queries: false
+  share-context: false
+
+advanced:
+  temperature: 0.7
+  max-tokens: 500
+  
+  # Choose one of the examples above or create your own!
+  # The {player} placeholder will be replaced with the player's name
+  system-prompt: "You are Grok, an AI assistant integrated into a Minecraft server. You're helpful, witty, and concise. Keep responses brief and engaging. You're talking to player: {player}"
+  
+  debug: false
+
+#==============================================================================
+# TIPS FOR WRITING CUSTOM PROMPTS
+#==============================================================================
+# 1. Keep it concise - shorter prompts = lower API costs
+# 2. Use {player} placeholder to personalize responses
+# 3. Set clear expectations for response style and length
+# 4. Match the prompt to your server's theme
+# 5. Test different prompts to find what works best
+# 6. Adjust temperature (0.0-2.0) for creativity:
+#    - 0.0-0.5: More consistent/factual
+#    - 0.6-1.0: Balanced (recommended)
+#    - 1.1-2.0: More creative/random
+#==============================================================================
+

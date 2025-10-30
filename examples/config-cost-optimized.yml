@@ -1,0 +1,68 @@
+# Cost-Optimized GrokChat Configuration
+# Minimizes API costs while keeping functionality
+
+api:
+  key: "your-xai-api-key-here"
+  model: "grok-beta"
+  timeout: 20  # Shorter timeout
+
+chat:
+  enable-mentions: true
+  mention-prefix: "@grok"
+  enable-command: true
+  
+  # Auto-response with stricter requirements to save costs
+  enable-auto-response: true
+  auto-response-keywords:
+    - "hey grok"  # Only explicit phrases
+    - "grok help"
+  auto-response-min-words: 5  # Higher minimum to prevent spam
+  
+  max-message-length: 200  # Shorter questions = fewer tokens
+  cooldown: 30  # Long cooldown to reduce frequency
+
+response:
+  max-length: 150  # Shorter responses
+  color: "AQUA"
+  prefix: "&b[Grok]&r "
+  show-thinking: false  # Skip extra message
+
+rate-limit:
+  enabled: true
+  max-requests-per-hour: 5  # Very restrictive limit
+
+# Chat History - minimal to save tokens
+chat-history:
+  enabled: true
+  size: 5  # Only last 5 messages
+  use-in-auto-response: true
+  use-in-direct-mention: false  # Don't use for direct mentions
+
+# Player Data - disabled to save tokens
+player-data:
+  enabled: false  # Disabled to minimize API costs
+  include-position: true
+  include-biome: true
+  include-world: true
+  include-health: true
+  include-experience: true
+  include-held-item: true
+  include-equipment: true
+  include-gamemode: true
+  include-effects: true
+  use-in-auto-response: false
+  use-in-direct-mention: false
+
+privacy:
+  log-queries: false
+  share-context: false
+
+advanced:
+  temperature: 0.5  # Less creative = more predictable costs
+  max-tokens: 200  # Limit response length
+  
+  # Cost-optimized system prompt - brief instructions
+  system-prompt: "You are Grok. Be concise. Maximum 2-3 sentences. Player: {player}"
+  
+  debug: false
+

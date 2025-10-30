@@ -1,0 +1,30 @@
+name: MCGrokChat
+version: '${project.version}'
+main: com.grokchat.GrokChatPlugin
+api-version: '1.21'
+author: eldor
+description: Minecraft plugin that integrates Grok AI into server chat with @mentions, auto-response, and contextual awareness
+website: https://github.com/eldor47/MCGrokChat
+
+commands:
+  grok:
+    description: Ask Grok AI a question
+    usage: /<command> <question>
+    aliases: [ask, ai]
+  grokchat:
+    description: Admin commands for GrokChat
+    usage: /<command> [reload|setkey|info]
+    permission: grokchat.admin
+    aliases: [gc]
+
+permissions:
+  grokchat.use:
+    description: Allows players to use @grok mentions and auto-response in chat
+    default: true
+  grokchat.command:
+    description: Allows players to use /grok command
+    default: true
+  grokchat.admin:
+    description: Allows access to admin commands
+    default: op
+

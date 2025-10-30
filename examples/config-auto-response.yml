@@ -1,0 +1,243 @@
+# GrokChat Configuration - Auto-Response Examples
+# This file shows different ways to configure the auto-response feature
+
+#==============================================================================
+# EXAMPLE 1: DEFAULT CONFIGURATION (Enabled, Natural Keywords)
+#==============================================================================
+chat:
+  enable-auto-response: true
+  auto-response-keywords:
+    - "grok"
+    - "hey grok"
+    - "yo grok"
+  auto-response-min-words: 3
+
+# How it works:
+# Player: "hey grok what's the best food?"
+# Grok: *responds to everyone in chat*
+# 
+# Player: "grok"  (only 1 word)
+# Grok: *ignores - too short*
+
+#==============================================================================
+# EXAMPLE 2: DISABLED AUTO-RESPONSE (Only @grok works)
+#==============================================================================
+# chat:
+#   enable-auto-response: false
+
+# How it works:
+# Player: "hey grok how do I craft this?"
+# Grok: *no response*
+# 
+# Player: "@grok how do I craft this?"
+# Grok: *responds to player only*
+
+#==============================================================================
+# EXAMPLE 3: MULTIPLE TRIGGER WORDS (Friendly server)
+#==============================================================================
+# chat:
+#   enable-auto-response: true
+#   auto-response-keywords:
+#     - "grok"
+#     - "hey grok"
+#     - "yo grok"
+#     - "grok help"
+#     - "ask grok"
+#     - "grok question"
+#   auto-response-min-words: 3
+
+# More ways to trigger Grok naturally in conversation
+
+#==============================================================================
+# EXAMPLE 4: STRICT MODE (Exact phrases only)
+#==============================================================================
+# chat:
+#   enable-auto-response: true
+#   auto-response-keywords:
+#     - "hey grok"
+#     - "yo grok"
+#     - "grok please"
+#   auto-response-min-words: 5  # Requires longer messages
+  
+# Requires more specific phrases and longer messages
+
+#==============================================================================
+# EXAMPLE 5: ROLEPLAY SERVER (Custom character name)
+#==============================================================================
+# chat:
+#   enable-auto-response: true
+#   auto-response-keywords:
+#     - "merlin"
+#     - "hey merlin"
+#     - "wizard"
+#   auto-response-min-words: 3
+# 
+# advanced:
+#   system-prompt: "You are Merlin the Wise wizard. Respond when addressed as Merlin or wizard."
+
+# Player: "hey merlin how do I enchant?"
+# Merlin: *mystical response to all*
+
+#==============================================================================
+# EXAMPLE 6: MINIMAL TRIGGERS (Prevent spam)
+#==============================================================================
+# chat:
+#   enable-auto-response: true
+#   auto-response-keywords:
+#     - "grok"
+#   auto-response-min-words: 5  # Require at least 5 words
+
+# Reduces accidental triggers and spam
+
+#==============================================================================
+# EXAMPLE 7: COMMUNITY HELPER (Multiple names)
+#==============================================================================
+# chat:
+#   enable-auto-response: true
+#   auto-response-keywords:
+#     - "grok"
+#     - "ai"
+#     - "bot"
+#     - "assistant"
+#     - "help bot"
+#   auto-response-min-words: 3
+
+# Responds to multiple names naturally
+
+#==============================================================================
+# EXAMPLE 8: SILENT MODE (No keyword needed with @mention)
+#==============================================================================
+# chat:
+#   enable-auto-response: false  # Disabled
+#   auto-response-keywords: []   # Empty list
+#   
+# # Only @grok mentions work now
+
+# Good for servers that want explicit mentions only
+
+#==============================================================================
+# FULL CONFIGURATION EXAMPLE WITH AUTO-RESPONSE
+#==============================================================================
+
+api:
+  key: "your-xai-api-key-here"
+  endpoint: "https://api.x.ai/v1/chat/completions"
+  model: "grok-beta"
+  timeout: 30
+
+chat:
+  enable-mentions: true
+  mention-prefix: "@grok"
+  enable-command: true
+  
+  # Auto-response feature (ON by default)
+  enable-auto-response: true
+  auto-response-keywords:
+    - "grok"
+    - "hey grok"
+    - "yo grok"
+  auto-response-min-words: 3
+  
+  max-message-length: 500
+  cooldown: 5
+
+response:
+  max-length: 256
+  color: "AQUA"
+  prefix: "&b[Grok]&r "
+  show-thinking: true
+  thinking-message: "&7Grok is thinking..."
+
+rate-limit:
+  enabled: true
+  max-requests-per-hour: 20
+
+privacy:
+  log-queries: false
+  share-context: false
+
+advanced:
+  temperature: 0.7
+  max-tokens: 500
+  system-prompt: "You are Grok, an AI assistant integrated into a Minecraft server. You're helpful, witty, and concise. Keep responses brief and engaging. You're talking to player: {player}"
+  debug: false
+
+#==============================================================================
+# HOW AUTO-RESPONSE WORKS
+#==============================================================================
+
+# DIRECT MENTION (@grok):
+# - Player: "@grok how do I get diamonds?"
+# - Response sent to THAT PLAYER ONLY
+# - Shows "thinking" message
+# - Removes @grok from the question
+
+# AUTO-RESPONSE (keyword trigger):
+# - Player: "hey grok what's the best enchantment?"
+# - Response BROADCAST to ALL PLAYERS (like Grok joining the conversation)
+# - No "thinking" message (feels more natural)
+# - Full message sent as context including the keyword
+
+# DIFFERENCES:
+# ┌─────────────────┬──────────────┬────────────────┐
+# │ Feature         │ @grok        │ Auto-Response  │
+# ├─────────────────┼──────────────┼────────────────┤
+# │ Who sees it?    │ Player only  │ Everyone       │
+# │ Thinking msg?   │ Yes          │ No             │
+# │ Message sent    │ Without @grok│ Full message   │
+# │ Feel            │ Private query│ Chat participant│
+# └─────────────────┴──────────────┴────────────────┘
+
+#==============================================================================
+# TIPS FOR CONFIGURING AUTO-RESPONSE
+#==============================================================================
+
+# 1. START CONSERVATIVE
+#    - Use auto-response-min-words: 4 or higher
+#    - Prevents accidental triggers like "grok lol"
+
+# 2. CHOOSE KEYWORDS WISELY
+#    - Use unique words that won't appear in normal chat
+#    - "grok" is good, "help" is too common
+
+# 3. MONITOR API COSTS
+#    - Auto-response can increase API usage
+#    - Lower rate-limit.max-requests-per-hour if needed
+#    - Consider disabling during peak hours
+
+# 4. CONSIDER YOUR COMMUNITY
+#    - Friendly servers: Enable with multiple keywords
+#    - Serious/competitive: Disable or use strict phrases
+#    - Roleplay: Match keywords to character name
+
+# 5. TEST THOROUGHLY
+#    - Enable debug mode temporarily
+#    - Test various message patterns
+#    - Check if unwanted triggers occur
+
+# 6. BALANCE VISIBILITY
+#    - Auto-response is great for community feel
+#    - But can be spammy if triggered too often
+#    - Adjust min-words to find the right balance
+
+#==============================================================================
+# TROUBLESHOOTING
+#==============================================================================
+
+# Problem: Too many triggers / spam
+# Solution: Increase auto-response-min-words to 5+
+
+# Problem: Not triggering when expected
+# Solution: Check keywords list, ensure keyword is present
+
+# Problem: Players don't understand two modes
+# Solution: Add server rules or info command explaining
+
+# Problem: Too expensive
+# Solution: Disable auto-response, keep @grok only
+
+# Problem: Want different cooldowns for each mode
+# Solution: Currently shares cooldown (feature request!)
+
+#==============================================================================
+

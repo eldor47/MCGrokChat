@@ -1,0 +1,148 @@
+# GrokChat Configuration File
+# Get your API key from: https://console.x.ai/
+
+# xAI API Configuration
+api:
+  # Your xAI API key (required)
+  key: "your-xai-api-key-here"
+  
+  # API endpoint (default should work)
+  endpoint: "https://api.x.ai/v1/chat/completions"
+  
+  # Model to use
+  model: "grok-beta"
+  
+  # Request timeout in seconds
+  timeout: 30
+
+# Chat Settings
+chat:
+  # Enable @grok mentions in chat
+  enable-mentions: true
+  
+  # Prefix for triggering Grok (e.g., @grok, !grok)
+  mention-prefix: "@grok"
+  
+  # Enable /grok command
+  enable-command: true
+  
+  # Auto-respond when "grok" is mentioned in chat (without prefix)
+  # Grok will respond to the chat context naturally
+  enable-auto-response: true
+  
+  # Keywords that trigger auto-response (case-insensitive)
+  # Set to empty list [] to disable keyword matching
+  auto-response-keywords:
+    - "grok"
+    - "hey grok"
+    - "yo grok"
+  
+  # Minimum words in message to trigger auto-response (prevents spam)
+  auto-response-min-words: 3
+  
+  # Maximum characters per message to Grok
+  max-message-length: 500
+  
+  # Cooldown between requests (seconds)
+  cooldown: 5
+
+# Response Settings
+response:
+  # Maximum response length (will be split if longer)
+  max-length: 256
+  
+  # Color of Grok's responses (e.g., AQUA, GREEN, YELLOW)
+  color: "AQUA"
+  
+  # Prefix for Grok's responses
+  prefix: "&b[Grok]&r "
+  
+  # Show "thinking" message while waiting
+  show-thinking: true
+  
+  # Thinking message
+  thinking-message: "&7Grok is thinking..."
+
+# Rate Limiting
+rate-limit:
+  # Enable rate limiting
+  enabled: true
+  
+  # Max requests per player per hour
+  max-requests-per-hour: 20
+
+# Chat History Context
+chat-history:
+  # Enable chat history for context (helps Grok understand conversation flow)
+  enabled: true
+  
+  # Number of recent messages to keep as context (5-10 recommended)
+  size: 10
+  
+  # Include history in auto-responses (makes responses more contextual)
+  use-in-auto-response: true
+  
+  # Include history in direct mentions (optional, may increase token usage)
+  use-in-direct-mention: false
+
+# Player Data Context (optional - helps Grok give location-specific advice)
+player-data:
+  # Enable player data context
+  enabled: false
+  
+  # Include player's current position (X, Y, Z coordinates)
+  include-position: true
+  
+  # Include biome information
+  include-biome: true
+  
+  # Include world/dimension name (Overworld, Nether, End)
+  include-world: true
+  
+  # Include health status (health/hunger levels)
+  include-health: true
+  
+  # Include experience level and progress
+  include-experience: true
+  
+  # Include currently held item
+  include-held-item: true
+  
+  # Include armor and equipment
+  include-equipment: true
+  
+  # Include game mode (Survival, Creative, Adventure, Spectator)
+  include-gamemode: true
+  
+  # Include active status effects (potions, fire, etc.)
+  include-effects: true
+  
+  # Use player data in auto-responses
+  use-in-auto-response: false
+  
+  # Use player data in direct mentions (recommended for private queries)
+  use-in-direct-mention: true
+
+# Privacy Settings
+privacy:
+  # Log all queries (disable for privacy)
+  log-queries: false
+  
+  # Share context with other players in the same conversation
+  share-context: false
+
+# Advanced Settings
+advanced:
+  # Temperature for responses (0.0-2.0, higher = more creative)
+  temperature: 0.7
+  
+  # Maximum tokens in response
+  max-tokens: 500
+  
+  # System prompt for Grok (customize how Grok behaves)
+  # Available placeholders: {player} - player name
+  system-prompt: "You are Grok, an AI assistant integrated into a Minecraft server. You're helpful, witty, and concise. Keep responses brief and engaging. You're talking to player: {player}"
+  
+  # Enable debug mode
+  debug: false
+
