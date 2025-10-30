@@ -1,37 +1,52 @@
-# MCGrokChat - Bring Grok AI to Minecraft! 🤖⛏️
+# MCGrokChat - Bring Grok AI to Minecraft
 
 [![GitHub](https://img.shields.io/badge/GitHub-MCGrokChat-brightgreen.svg)](https://github.com/eldor47/MCGrokChat)
 [![Spigot](https://img.shields.io/badge/Spigot-1.21+-orange.svg)](https://www.spigotmc.org/)
+[![Paper](https://img.shields.io/badge/Paper-1.21+-blue.svg)](https://papermc.io/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 **Minecraft plugin that integrates Grok AI into server chat with @mentions, auto-response, and contextual awareness**
 
 Integrate Grok AI (by xAI) directly into your Minecraft server! Players can ask Grok questions using `@grok` in chat or the `/grok` command.
 
-## ✨ Features
+## Features
 
-- 🗨️ **Chat Integration** - Mention `@grok` in chat to ask questions
-- 🤖 **Auto-Response** - Grok joins conversations when mentioned naturally (ON by default!)
-- 🧠 **Chat History Context** - Grok understands conversation flow (last 10 messages)
-- 📍 **Player Data Context** - Optional location/biome/health awareness for better advice
-- ⚡ **Command Support** - Use `/grok <question>` for direct queries
-- ⌨️ **Tab Completion** - Smart type-ahead for all commands
-- 🔒 **Rate Limiting** - Configurable hourly request limits per player
-- ⏱️ **Cooldown System** - Prevent spam with customizable cooldowns
-- 🎨 **Customizable Responses** - Configure colors, prefixes, and message formats
-- 🎭 **Custom Personalities** - Change Grok's behavior with system prompts
-- 🔧 **Admin Tools** - Reload config, test API, view stats, and more
-- 📊 **Usage Statistics** - Track player usage and remaining requests
-- 🔐 **Permissions System** - Fine-grained control over who can use what
-- 🐛 **Debug Mode** - Detailed logging for troubleshooting
+- **Chat Integration** - Mention `@grok` in chat to ask questions
+- **Auto-Response** - Grok joins conversations when mentioned naturally (ON by default!)
+- **Chat History Context** - Grok understands conversation flow (last 10 messages)
+- **Player Data Context** - Optional location/biome/health awareness for better advice
+- **Command Support** - Use `/grok <question>` for direct queries
+- **Tab Completion** - Smart type-ahead for all commands
+- **Rate Limiting** - Configurable hourly request limits per player
+- **Cooldown System** - Prevent spam with customizable cooldowns
+- **Customizable Responses** - Configure colors, prefixes, and message formats
+- **Custom Personalities** - Change Grok's behavior with system prompts
+- **Admin Tools** - Reload config, test API, view stats, and more
+- **Usage Statistics** - Track player usage and remaining requests
+- **Permissions System** - Fine-grained control over who can use what
+- **Debug Mode** - Detailed logging for troubleshooting
 
-## 📋 Requirements
+## Requirements
 
 - Java 17 or higher
-- Spigot/Paper 1.20+ (may work on earlier versions)
 - xAI API key (get yours at [console.x.ai](https://console.x.ai/))
+- One of the following server types:
+  - **Spigot** 1.21+ (recommended minimum)
+  - **Paper** 1.21+ (recommended for best performance)
+  - **Purpur** 1.21+ (fully supported)
+  - Other Spigot-based servers (may work on earlier versions)
 
-## 🚀 Installation
+## Supported Servers
+
+MCGrokChat is built for Spigot-based Minecraft servers and is fully tested with:
+
+- **Spigot** - The original Spigot server software
+- **Paper** - High-performance fork of Spigot (recommended)
+- **Purpur** - Fork of Paper with additional optimizations
+
+The plugin uses the Spigot API (version 1.21+) and should work on any server that implements it. It may work on earlier versions (1.20+), but 1.21+ is recommended for full feature support.
+
+## Installation
 
 1. **Download** the latest `MCGrokChat.jar` from [releases](https://github.com/eldor47/MCGrokChat/releases)
 2. **Place** the jar in your server's `plugins` folder
@@ -40,14 +55,14 @@ Integrate Grok AI (by xAI) directly into your Minecraft server! Players can ask 
 5. **Edit** `plugins/MCGrokChat/config.yml` and add your xAI API key
 6. **Start** your server again
 
-## 🔑 Getting Your API Key
+## Getting Your API Key
 
 1. Visit [https://console.x.ai/](https://console.x.ai/)
 2. Sign in with your X (Twitter) account
 3. Create a new API key
 4. Copy the key and paste it in `config.yml`
 
-## ⚙️ Configuration
+## Configuration
 
 Edit `plugins/MCGrokChat/config.yml`:
 
@@ -110,7 +125,7 @@ advanced:
   debug: false
 ```
 
-## 📝 Commands
+## Commands
 
 ### Player Commands
 
@@ -151,7 +166,7 @@ advanced:
 
 **Aliases:** `/gc`, `/ask`, `/ai`
 
-## 🔐 Permissions
+## Permissions
 
 | Permission | Description | Default |
 |------------|-------------|---------|
@@ -159,7 +174,7 @@ advanced:
 | `grokchat.command` | Use /grok command | `true` |
 | `grokchat.admin` | Access admin commands | `op` |
 
-## 🎮 Usage Examples
+## Usage Examples
 
 ### For Players
 
@@ -211,7 +226,7 @@ Cooldown: Ready
 ✓ GrokChat configuration reloaded!
 ```
 
-## 🛠️ Building from Source
+## Building from Source
 
 Requirements:
 - Maven 3.6+
@@ -219,24 +234,25 @@ Requirements:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/grokchat.git
-cd grokchat
+git clone https://github.com/eldor47/MCGrokChat.git
+cd MCGrokChat
 
 # Build with Maven
 mvn clean package
 
-# Find the jar in target/GrokChat-1.0.0.jar
+# Find the jar in target/MCGrokChat-1.0.0.jar
 ```
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Plugin won't load
 - Make sure you're using Java 17+
 - Check server logs for errors
-- Verify you have Spigot/Paper 1.20+
+- Verify you're using Spigot/Paper/Purpur 1.21+ (or compatible Spigot-based server)
+- Ensure you're using a Spigot-based server (not Bukkit-only or Fabric/Quilt)
 
 ### "API key not configured" warning
-- Edit `plugins/GrokChat/config.yml`
+- Edit `plugins/MCGrokChat/config.yml`
 - Replace `your-xai-api-key-here` with your actual API key
 - Run `/grokchat reload`
 
@@ -254,7 +270,7 @@ mvn clean package
 - Adjust `rate-limit.max-requests-per-hour`
 - Or disable rate limiting: `rate-limit.enabled: false`
 
-## 📊 API Usage & Costs
+## API Usage & Costs
 
 GrokChat uses the xAI API. Check [xAI's pricing page](https://x.ai/api) for current rates.
 
@@ -264,14 +280,14 @@ GrokChat uses the xAI API. Check [xAI's pricing page](https://x.ai/api) for curr
 - Lower `rate-limit.max-requests-per-hour`
 - Disable features you don't need
 
-## 🔒 Privacy & Security
+## Privacy & Security
 
 - **API Key Security**: Your API key is stored in `config.yml`. Use proper file permissions!
 - **Query Logging**: Disabled by default. Enable with `privacy.log-queries: true`
 - **Rate Limiting**: Prevents abuse and controls costs
 - **Context Sharing**: Disabled by default for privacy
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please:
 
@@ -281,23 +297,22 @@ Contributions are welcome! Please:
 4. Test thoroughly
 5. Submit a pull request
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Credits
+## Credits
 
 - Built for Spigot/Paper Minecraft servers
 - Powered by [Grok](https://grok.x.ai/) by xAI
 - Inspired by Twitter/X's @grok feature
 
-## 📞 Support
+## Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/grokchat/issues)
-- **Discord**: [Your Discord Server](#)
-- **Wiki**: [GitHub Wiki](https://github.com/yourusername/grokchat/wiki)
+- **Issues**: [GitHub Issues](https://github.com/eldor47/MCGrokChat/issues)
+- **Wiki**: [GitHub Wiki](https://github.com/eldor47/MCGrokChat/wiki)
 
-## 🤖 Auto-Response Feature
+## Auto-Response Feature
 
 Grok can **join conversations naturally** when players mention keywords! This is **ON by default**.
 
@@ -341,7 +356,7 @@ Player3: "grok any suggestions?"
 [Grok] for texture variety. Don't forget battlements on top!
 ```
 
-Grok understood the conversation context! 🎯
+Grok understood the conversation context!
 
 **Configure in config.yml:**
 ```yaml
@@ -353,16 +368,16 @@ chat-history:
 ```
 
 **Benefits:**
-- 📚 Grok understands follow-up questions
-- 🎯 More relevant and contextual responses  
-- 💬 Natural conversation flow
-- 👥 Better for group discussions
+- Grok understands follow-up questions
+- More relevant and contextual responses  
+- Natural conversation flow
+- Better for group discussions
 
 **To disable:** Set `enabled: false` in `chat-history` section
 
 See [docs/guides/CHAT_HISTORY_GUIDE.md](docs/guides/CHAT_HISTORY_GUIDE.md) for complete documentation!
 
-## 📍 Player Data Context
+## Player Data Context
 
 Grok can **see your location and status** to give location-specific advice!
 
@@ -391,15 +406,15 @@ player-data:
 ```
 
 **Benefits:**
-- 🎯 Location-specific advice (e.g., "You're at Y-59, perfect for diamonds!")
-- 🌍 Biome-aware suggestions (e.g., "Plains biome is great for farming")
-- ❤️ Health-aware responses (e.g., "You're low on health, eat food first!")
-- 🗺️ Dimension-specific tips (e.g., "In the Nether, bring fire resistance")
-- ⭐ XP-aware advice (e.g., "At level 25, you can access level 30 enchants!")
-- 🛠️ Item-aware help (e.g., "Since you're holding a diamond sword, repair it with...")
-- 🛡️ Equipment-aware suggestions (e.g., "For your netherite armor, prioritize Protection IV")
-- 🎮 Mode-specific tips (e.g., "In Creative mode, use /fill commands")
-- ⚡ Effect-aware safety (e.g., "Good that you have Fire Resistance! You can swim through lava")
+- Location-specific advice (e.g., "You're at Y-59, perfect for diamonds!")
+- Biome-aware suggestions (e.g., "Plains biome is great for farming")
+- Health-aware responses (e.g., "You're low on health, eat food first!")
+- Dimension-specific tips (e.g., "In the Nether, bring fire resistance")
+- XP-aware advice (e.g., "At level 25, you can access level 30 enchants!")
+- Item-aware help (e.g., "Since you're holding a diamond sword, repair it with...")
+- Equipment-aware suggestions (e.g., "For your netherite armor, prioritize Protection IV")
+- Mode-specific tips (e.g., "In Creative mode, use /fill commands")
+- Effect-aware safety (e.g., "Good that you have Fire Resistance! You can swim through lava")
 
 **Privacy:** Disabled by default. Enable only if you want location-aware responses!
 
@@ -418,7 +433,7 @@ Player context:
 - Status Effects: Speed II (3m 45s), Fire Resistance (5m 20s)
 ```
 
-## 🎨 Customizing Grok's Personality
+## Customizing Grok's Personality
 
 You can customize how Grok behaves by changing the `system-prompt` in the config:
 
@@ -435,21 +450,20 @@ advanced:
 
 See `examples/config-custom-prompts.yml` for 12+ pre-made prompt examples!
 
-## 🎯 Roadmap
+## Roadmap
 
 - [x] Custom system prompts per server
 - [x] Auto-response in chat (natural conversation mode)
 - [x] Chat history context for better responses
 - [x] Tab completion for all commands
 - [ ] Multi-language support
-- [ ] Web dashboard for analytics
-- [ ] Integration with other plugins
-- [ ] PlaceholderAPI support
+- [ ] PlaceholderAPI integration - Allow Grok data to be used as placeholders in other plugins (e.g., `%grok_request_count%`, `%grok_cooldown%`)
+- [ ] Integration with other plugins (economy, permissions, etc.)
 - [ ] Persistent conversation memory
 
 ---
 
-## 📚 Documentation
+## Documentation
 
 Additional guides and documentation are available in the `docs/` folder:
 
@@ -467,17 +481,17 @@ Additional guides and documentation are available in the `docs/` folder:
 
 ---
 
-## 👤 Author
+## Author
 
 **eldor** ([@eldor47](https://github.com/eldor47))
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-**Made with ❤️ for the Minecraft community**
+**Made with love for the Minecraft community**
 
 *Not affiliated with Mojang, Microsoft, or xAI*
 
