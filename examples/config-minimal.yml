@@ -3,7 +3,7 @@
 
 api:
   key: "your-xai-api-key-here"
-  model: "grok-beta"
+  model: "grok-3-mini"
   endpoint: "https://api.x.ai/v1/chat/completions"
   timeout: 30
 

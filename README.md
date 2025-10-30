@@ -72,7 +72,7 @@ api:
   key: "your-xai-api-key-here"
   
   # Model to use
-  model: "grok-beta"
+  model: "grok-3-mini"
   
   # Request timeout in seconds
   timeout: 30
