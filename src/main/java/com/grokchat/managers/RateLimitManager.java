@@ -35,8 +35,8 @@ public class RateLimitManager {
         // Remove timestamps older than 1 hour
         timestamps.removeIf(timestamp -> timestamp < oneHourAgo);
 
-        // Check if player has exceeded limit
-        int maxRequests = plugin.getConfigManager().getMaxRequestsPerHour();
+        // Check if player has exceeded limit (uses per-group limits if configured)
+        int maxRequests = plugin.getConfigManager().getMaxRequestsPerHour(player);
         return timestamps.size() < maxRequests;
     }
 
@@ -59,13 +59,13 @@ public class RateLimitManager {
 
         ConcurrentLinkedQueue<Long> timestamps = requestTimestamps.get(playerId);
         if (timestamps == null) {
-            return plugin.getConfigManager().getMaxRequestsPerHour();
+            return plugin.getConfigManager().getMaxRequestsPerHour(player);
         }
 
         // Remove old timestamps
         timestamps.removeIf(timestamp -> timestamp < oneHourAgo);
 
-        int maxRequests = plugin.getConfigManager().getMaxRequestsPerHour();
+        int maxRequests = plugin.getConfigManager().getMaxRequestsPerHour(player);
         return Math.max(0, maxRequests - timestamps.size());
     }
 

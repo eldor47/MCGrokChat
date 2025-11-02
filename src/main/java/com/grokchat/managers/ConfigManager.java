@@ -68,6 +68,15 @@ public class ConfigManager {
         return config.getInt("chat.auto-response-min-words", 3);
     }
 
+    // Blacklist Settings
+    public boolean isBlacklistEnabled() {
+        return config.getBoolean("blacklist.enabled", true);
+    }
+
+    public java.util.List<String> getBlacklistedWords() {
+        return config.getStringList("blacklist.blocked-words");
+    }
+
     // Response Settings
     public int getMaxResponseLength() {
         return config.getInt("response.max-length", 256);
@@ -96,6 +105,57 @@ public class ConfigManager {
 
     public int getMaxRequestsPerHour() {
         return config.getInt("rate-limit.max-requests-per-hour", 20);
+    }
+
+    /**
+     * Get the maximum requests per hour for a specific player based on their permissions.
+     * Checks all group rate limit permissions and returns the highest value.
+     * Falls back to default if player has no group permissions.
+     * 
+     * @param player The player to check
+     * @return The maximum requests per hour for this player
+     */
+    public int getMaxRequestsPerHour(org.bukkit.entity.Player player) {
+        if (player == null) {
+            return getMaxRequestsPerHour();
+        }
+
+        int maxLimit = getMaxRequestsPerHour(); // Default limit
+        org.bukkit.configuration.ConfigurationSection groupsSection = config.getConfigurationSection("rate-limit.groups");
+        
+        if (groupsSection == null) {
+            return maxLimit;
+        }
+
+        // Check all group rate limit permissions and find the highest
+        for (String permission : groupsSection.getKeys(false)) {
+            if (player.hasPermission(permission)) {
+                int groupLimit = groupsSection.getInt(permission, maxLimit);
+                if (groupLimit > maxLimit) {
+                    maxLimit = groupLimit;
+                }
+            }
+        }
+
+        return maxLimit;
+    }
+
+    /**
+     * Get all configured group rate limits as a map.
+     * 
+     * @return Map of permission node to rate limit
+     */
+    public java.util.Map<String, Integer> getGroupRateLimits() {
+        java.util.Map<String, Integer> groups = new java.util.HashMap<>();
+        org.bukkit.configuration.ConfigurationSection groupsSection = config.getConfigurationSection("rate-limit.groups");
+        
+        if (groupsSection != null) {
+            for (String permission : groupsSection.getKeys(false)) {
+                groups.put(permission, groupsSection.getInt(permission));
+            }
+        }
+        
+        return groups;
     }
 
     // Chat History Settings

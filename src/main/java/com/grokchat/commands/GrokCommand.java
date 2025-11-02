@@ -46,6 +46,15 @@ public class GrokCommand implements CommandExecutor {
         // Build question from args
         String question = String.join(" ", args);
 
+        // Check blacklist (silently ignore if message contains blacklisted words)
+        if (plugin.getConfigManager().isBlacklistEnabled()) {
+            java.util.List<String> blacklistedWords = plugin.getConfigManager().getBlacklistedWords();
+            if (MessageUtils.containsBlacklistedWord(question, blacklistedWords)) {
+                player.sendMessage(ChatColor.RED + "Your message contains blacklisted content and cannot be processed.");
+                return true;
+            }
+        }
+
         // Check message length
         if (question.length() > plugin.getConfigManager().getMaxMessageLength()) {
             player.sendMessage(ChatColor.RED + "Your message is too long! Maximum " + 

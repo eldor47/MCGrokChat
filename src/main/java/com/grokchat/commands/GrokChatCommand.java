@@ -49,6 +49,10 @@ public class GrokChatCommand implements CommandExecutor {
                 handleStats(sender, args);
                 break;
                 
+            case "blacklist":
+                handleBlacklist(sender, args);
+                break;
+                
             default:
                 sendHelp(sender);
                 break;
@@ -64,6 +68,7 @@ public class GrokChatCommand implements CommandExecutor {
         sender.sendMessage(ChatColor.YELLOW + "/grokchat setkey <key> " + ChatColor.GRAY + "- Set API key");
         sender.sendMessage(ChatColor.YELLOW + "/grokchat test " + ChatColor.GRAY + "- Test API connection");
         sender.sendMessage(ChatColor.YELLOW + "/grokchat stats [player] " + ChatColor.GRAY + "- View usage statistics");
+        sender.sendMessage(ChatColor.YELLOW + "/grokchat blacklist " + ChatColor.GRAY + "- Manage blacklist (list/add/remove/clear/enable/disable)");
     }
 
     private void handleReload(CommandSender sender) {
@@ -91,10 +96,23 @@ public class GrokChatCommand implements CommandExecutor {
             (plugin.getConfigManager().isCommandEnabled() ? "Yes" : "No"));
         sender.sendMessage(ChatColor.YELLOW + "Mentions Enabled: " + ChatColor.WHITE + 
             (plugin.getConfigManager().isMentionsEnabled() ? "Yes" : "No"));
-        sender.sendMessage(ChatColor.YELLOW + "Rate Limit: " + ChatColor.WHITE + 
+        sender.sendMessage(ChatColor.YELLOW + "Default Rate Limit: " + ChatColor.WHITE + 
             plugin.getConfigManager().getMaxRequestsPerHour() + " requests/hour");
+        
+        // Show group rate limits
+        java.util.Map<String, Integer> groupLimits = plugin.getConfigManager().getGroupRateLimits();
+        if (!groupLimits.isEmpty()) {
+            sender.sendMessage(ChatColor.YELLOW + "Group Rate Limits:");
+            for (java.util.Map.Entry<String, Integer> entry : groupLimits.entrySet()) {
+                sender.sendMessage(ChatColor.GRAY + "  " + entry.getKey() + ": " + 
+                    ChatColor.WHITE + entry.getValue() + " requests/hour");
+            }
+        }
         sender.sendMessage(ChatColor.YELLOW + "Cooldown: " + ChatColor.WHITE + 
             plugin.getConfigManager().getCooldown() + " seconds");
+        sender.sendMessage(ChatColor.YELLOW + "Blacklist: " + ChatColor.WHITE + 
+            (plugin.getConfigManager().isBlacklistEnabled() ? ChatColor.GREEN + "Enabled" : ChatColor.RED + "Disabled") +
+            ChatColor.GRAY + " (" + plugin.getConfigManager().getBlacklistedWords().size() + " words)");
     }
 
     private void handleSetKey(CommandSender sender, String[] args) {
@@ -163,10 +181,11 @@ public class GrokChatCommand implements CommandExecutor {
     private void showPlayerStats(CommandSender sender, Player player) {
         sender.sendMessage(ChatColor.GOLD + "=== Grok Stats for " + player.getName() + " ===");
         
+        int max = plugin.getConfigManager().getMaxRequestsPerHour(player);
         int remaining = plugin.getRateLimitManager().getRemainingRequests(player);
-        int max = plugin.getConfigManager().getMaxRequestsPerHour();
         int used = max - remaining;
         
+        sender.sendMessage(ChatColor.YELLOW + "Rate Limit: " + ChatColor.WHITE + max + " requests/hour");
         sender.sendMessage(ChatColor.YELLOW + "Requests Used: " + ChatColor.WHITE + used + "/" + max);
         sender.sendMessage(ChatColor.YELLOW + "Requests Remaining: " + ChatColor.WHITE + remaining);
         
@@ -176,6 +195,146 @@ public class GrokChatCommand implements CommandExecutor {
         } else {
             sender.sendMessage(ChatColor.YELLOW + "Cooldown: " + ChatColor.GREEN + "Ready");
         }
+    }
+
+    private void handleBlacklist(CommandSender sender, String[] args) {
+        if (args.length < 2) {
+            sender.sendMessage(ChatColor.GOLD + "=== Blacklist Management ===");
+            sender.sendMessage(ChatColor.YELLOW + "/grokchat blacklist list " + ChatColor.GRAY + "- Show current blacklist");
+            sender.sendMessage(ChatColor.YELLOW + "/grokchat blacklist add <word> " + ChatColor.GRAY + "- Add word/phrase to blacklist");
+            sender.sendMessage(ChatColor.YELLOW + "/grokchat blacklist remove <word> " + ChatColor.GRAY + "- Remove word/phrase from blacklist");
+            sender.sendMessage(ChatColor.YELLOW + "/grokchat blacklist clear " + ChatColor.GRAY + "- Clear entire blacklist");
+            sender.sendMessage(ChatColor.YELLOW + "/grokchat blacklist enable " + ChatColor.GRAY + "- Enable blacklist");
+            sender.sendMessage(ChatColor.YELLOW + "/grokchat blacklist disable " + ChatColor.GRAY + "- Disable blacklist");
+            return;
+        }
+
+        String subcommand = args[1].toLowerCase();
+
+        switch (subcommand) {
+            case "list":
+                handleBlacklistList(sender);
+                break;
+                
+            case "add":
+                handleBlacklistAdd(sender, args);
+                break;
+                
+            case "remove":
+                handleBlacklistRemove(sender, args);
+                break;
+                
+            case "clear":
+                handleBlacklistClear(sender);
+                break;
+                
+            case "enable":
+                handleBlacklistEnable(sender);
+                break;
+                
+            case "disable":
+                handleBlacklistDisable(sender);
+                break;
+                
+            default:
+                sender.sendMessage(ChatColor.RED + "Unknown blacklist command. Use /grokchat blacklist for help.");
+                break;
+        }
+    }
+
+    private void handleBlacklistList(CommandSender sender) {
+        boolean enabled = plugin.getConfigManager().isBlacklistEnabled();
+        java.util.List<String> words = plugin.getConfigManager().getBlacklistedWords();
+        
+        sender.sendMessage(ChatColor.GOLD + "=== Blacklist Status ===");
+        sender.sendMessage(ChatColor.YELLOW + "Enabled: " + ChatColor.WHITE + (enabled ? ChatColor.GREEN + "Yes" : ChatColor.RED + "No"));
+        sender.sendMessage(ChatColor.YELLOW + "Blocked Words: " + ChatColor.WHITE + words.size());
+        
+        if (words.isEmpty()) {
+            sender.sendMessage(ChatColor.GRAY + "No words are currently blacklisted.");
+        } else {
+            sender.sendMessage(ChatColor.YELLOW + "Blacklisted words/phrases:");
+            for (String word : words) {
+                sender.sendMessage(ChatColor.GRAY + "  - " + ChatColor.WHITE + word);
+            }
+        }
+    }
+
+    private void handleBlacklistAdd(CommandSender sender, String[] args) {
+        if (args.length < 3) {
+            sender.sendMessage(ChatColor.RED + "Usage: /grokchat blacklist add <word or phrase>");
+            sender.sendMessage(ChatColor.GRAY + "Example: /grokchat blacklist add spam");
+            return;
+        }
+
+        // Join all arguments after "add" to support phrases
+        String word = String.join(" ", java.util.Arrays.copyOfRange(args, 2, args.length));
+        
+        java.util.List<String> words = new java.util.ArrayList<>(plugin.getConfigManager().getBlacklistedWords());
+        
+        if (words.contains(word)) {
+            sender.sendMessage(ChatColor.YELLOW + "Word '" + word + "' is already in the blacklist.");
+            return;
+        }
+        
+        words.add(word);
+        
+        // Save to config
+        plugin.getConfig().set("blacklist.blocked-words", words);
+        plugin.saveConfig();
+        plugin.reload();
+        
+        sender.sendMessage(ChatColor.GREEN + "✓ Added '" + word + "' to blacklist.");
+    }
+
+    private void handleBlacklistRemove(CommandSender sender, String[] args) {
+        if (args.length < 3) {
+            sender.sendMessage(ChatColor.RED + "Usage: /grokchat blacklist remove <word or phrase>");
+            sender.sendMessage(ChatColor.GRAY + "Example: /grokchat blacklist remove spam");
+            return;
+        }
+
+        // Join all arguments after "remove" to support phrases
+        String word = String.join(" ", java.util.Arrays.copyOfRange(args, 2, args.length));
+        
+        java.util.List<String> words = new java.util.ArrayList<>(plugin.getConfigManager().getBlacklistedWords());
+        
+        if (!words.remove(word)) {
+            sender.sendMessage(ChatColor.YELLOW + "Word '" + word + "' is not in the blacklist.");
+            return;
+        }
+        
+        // Save to config
+        plugin.getConfig().set("blacklist.blocked-words", words);
+        plugin.saveConfig();
+        plugin.reload();
+        
+        sender.sendMessage(ChatColor.GREEN + "✓ Removed '" + word + "' from blacklist.");
+    }
+
+    private void handleBlacklistClear(CommandSender sender) {
+        // Save empty list to config
+        plugin.getConfig().set("blacklist.blocked-words", new java.util.ArrayList<String>());
+        plugin.saveConfig();
+        plugin.reload();
+        
+        sender.sendMessage(ChatColor.GREEN + "✓ Blacklist cleared.");
+    }
+
+    private void handleBlacklistEnable(CommandSender sender) {
+        plugin.getConfig().set("blacklist.enabled", true);
+        plugin.saveConfig();
+        plugin.reload();
+        
+        sender.sendMessage(ChatColor.GREEN + "✓ Blacklist enabled.");
+    }
+
+    private void handleBlacklistDisable(CommandSender sender) {
+        plugin.getConfig().set("blacklist.enabled", false);
+        plugin.saveConfig();
+        plugin.reload();
+        
+        sender.sendMessage(ChatColor.GREEN + "✓ Blacklist disabled.");
     }
 }
 

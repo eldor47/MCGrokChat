@@ -46,6 +46,19 @@ chat:
   # Cooldown between requests (seconds)
   cooldown: 5
 
+# Blacklist Settings
+blacklist:
+  # Enable blacklist filtering
+  enabled: true
+  
+  # Words/phrases that prevent Grok from responding (case-insensitive)
+  # Messages containing these words will be ignored silently
+  # Supports partial matches (e.g., "spam" will block "spamming", "spam bot", etc.)
+  blocked-words:
+    - "spam"
+    - "test test test"
+    # Add more words/phrases here as needed
+
 # Response Settings
 response:
   # Maximum response length (will be split if longer)
@@ -68,8 +81,19 @@ rate-limit:
   # Enable rate limiting
   enabled: true
   
-  # Max requests per player per hour
+  # Default max requests per player per hour (for players without group permissions)
   max-requests-per-hour: 20
+  
+  # Per-group rate limits (uses permission nodes)
+  # Players with multiple group permissions will get the HIGHEST limit
+  # Example: If player has both grokchat.rate.vip (50) and grokchat.rate.member (20), they get 50
+  groups:
+    grokchat.rate.vip: 50
+    grokchat.rate.member: 20
+    grokchat.rate.guest: 5
+    # Add more groups as needed:
+    # grokchat.rate.premium: 100
+    # grokchat.rate.admin: 999
 
 # Chat History Context
 chat-history:

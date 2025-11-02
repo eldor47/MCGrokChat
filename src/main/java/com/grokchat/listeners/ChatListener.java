@@ -32,6 +32,14 @@ public class ChatListener implements Listener {
             return;
         }
         
+        // Check blacklist (silently ignore if message contains blacklisted words)
+        if (plugin.getConfigManager().isBlacklistEnabled()) {
+            java.util.List<String> blacklistedWords = plugin.getConfigManager().getBlacklistedWords();
+            if (MessageUtils.containsBlacklistedWord(message, blacklistedWords)) {
+                return; // Silently ignore blacklisted messages
+            }
+        }
+        
         String prefix = plugin.getConfigManager().getMentionPrefix();
         boolean isDirectMention = messageLower.contains(prefix.toLowerCase());
         boolean isAutoResponse = false;

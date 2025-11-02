@@ -17,13 +17,15 @@ Integrate Grok AI (by xAI) directly into your Minecraft server! Players can ask 
 - **Player Data Context** - Optional location/biome/health awareness for better advice
 - **Command Support** - Use `/grok <question>` for direct queries
 - **Tab Completion** - Smart type-ahead for all commands
-- **Rate Limiting** - Configurable hourly request limits per player
+- **Rate Limiting** - Configurable hourly request limits per player with per-group support
+- **Per-Group Rate Limits** - Different limits for VIP, Member, Guest, etc. based on permissions
+- **Blacklist Filtering** - Prevent Grok from responding to specific words/phrases
 - **Cooldown System** - Prevent spam with customizable cooldowns
 - **Customizable Responses** - Configure colors, prefixes, and message formats
 - **Custom Personalities** - Change Grok's behavior with system prompts
-- **Admin Tools** - Reload config, test API, view stats, and more
+- **Admin Tools** - Reload config, test API, view stats, manage blacklist, and more
 - **Usage Statistics** - Track player usage and remaining requests
-- **Permissions System** - Fine-grained control over who can use what
+- **Permissions System** - Fine-grained control with LuckPerms integration
 - **Debug Mode** - Detailed logging for troubleshooting
 
 ## Requirements
@@ -107,8 +109,26 @@ rate-limit:
   # Enable rate limiting
   enabled: true
   
-  # Max requests per player per hour
+  # Default max requests per player per hour (for players without group permissions)
   max-requests-per-hour: 20
+  
+  # Per-group rate limits (uses permission nodes)
+  # Players with multiple group permissions will get the HIGHEST limit
+  groups:
+    grokchat.rate.vip: 50
+    grokchat.rate.member: 20
+    grokchat.rate.guest: 5
+
+# Blacklist Settings
+blacklist:
+  # Enable blacklist filtering
+  enabled: true
+  
+  # Words/phrases that prevent Grok from responding (case-insensitive)
+  # Messages containing these words will be ignored silently
+  blocked-words:
+    - "spam"
+    - "test test test"
 
 advanced:
   # Temperature for responses (0.0-2.0, higher = more creative)
@@ -157,11 +177,18 @@ advanced:
 | `/grokchat setkey <key>` | Set API key | `grokchat.admin` |
 | `/grokchat test` | Test API connection | `grokchat.admin` |
 | `/grokchat stats [player]` | View usage statistics | `grokchat.admin` |
+| `/grokchat blacklist list` | Show blacklist | `grokchat.admin` |
+| `/grokchat blacklist add <word>` | Add word to blacklist | `grokchat.admin` |
+| `/grokchat blacklist remove <word>` | Remove word from blacklist | `grokchat.admin` |
+| `/grokchat blacklist clear` | Clear blacklist | `grokchat.admin` |
+| `/grokchat blacklist enable/disable` | Enable/disable blacklist | `grokchat.admin` |
 
 **Tab Completion:** Press TAB for command & player suggestions!
 ```
-/grokchat <TAB>        → reload, info, setkey, test, stats
-/grokchat stats <TAB>  → [list of online players]
+/grokchat <TAB>              → reload, info, setkey, test, stats, blacklist
+/grokchat blacklist <TAB>     → list, add, remove, clear, enable, disable
+/grokchat blacklist remove <TAB> → [suggests existing blacklisted words]
+/grokchat stats <TAB>         → [list of online players]
 ```
 
 **Aliases:** `/gc`, `/ask`, `/ai`
@@ -170,9 +197,14 @@ advanced:
 
 | Permission | Description | Default |
 |------------|-------------|---------|
-| `grokchat.use` | Use @grok in chat | `true` |
-| `grokchat.command` | Use /grok command | `true` |
+| `grokchat.use` | Use @grok in chat | `false` |
+| `grokchat.command` | Use /grok command | `false` |
 | `grokchat.admin` | Access admin commands | `op` |
+| `grokchat.rate.vip` | VIP rate limit (50/hour) | `false` |
+| `grokchat.rate.member` | Member rate limit (20/hour) | `false` |
+| `grokchat.rate.guest` | Guest rate limit (5/hour) | `false` |
+
+**Note:** Rate limit permissions are configurable in `config.yml`. Grant these permissions via LuckPerms or your permission plugin to set per-group limits. Players with multiple rate limit permissions get the **highest** limit.
 
 ## Usage Examples
 
@@ -215,8 +247,9 @@ Response: OK
 ```
 /grokchat stats Steve
 === Grok Stats for Steve ===
-Requests Used: 5/20
-Requests Remaining: 15
+Rate Limit: 50 requests/hour
+Requests Used: 12/50
+Requests Remaining: 38
 Cooldown: Ready
 ```
 
@@ -224,6 +257,14 @@ Cooldown: Ready
 ```
 /grokchat reload
 ✓ GrokChat configuration reloaded!
+```
+
+**Manage Blacklist:**
+```
+/grokchat blacklist list
+/grokchat blacklist add spam
+/grokchat blacklist remove spam
+/grokchat blacklist enable
 ```
 
 ## Building from Source
@@ -343,6 +384,84 @@ Player1: "thanks!"
 
 See `examples/config-auto-response.yml` for detailed configuration options!
 
+## 🚫 Blacklist Filtering
+
+Prevent Grok from responding to specific words or phrases. Useful for filtering spam, inappropriate content, or test messages.
+
+**Features:**
+- Case-insensitive matching (blocks "SPAM", "spam", "Spam")
+- Partial word matching (blocks "spamming", "spam bot")
+- Silent filtering (no error messages, just ignored)
+- Runtime management via admin commands
+
+**Configure in config.yml:**
+```yaml
+blacklist:
+  enabled: true
+  blocked-words:
+    - "spam"
+    - "test test test"
+    - "badword"
+```
+
+**Admin Commands:**
+```
+/grokchat blacklist list          # Show current blacklist
+/grokchat blacklist add <word>    # Add word/phrase to blacklist
+/grokchat blacklist remove <word> # Remove word/phrase
+/grokchat blacklist clear         # Clear entire blacklist
+/grokchat blacklist enable        # Enable blacklist filtering
+/grokchat blacklist disable       # Disable blacklist filtering
+```
+
+**How it works:**
+- Messages containing blacklisted words are silently ignored
+- Works for both `@grok` mentions and `/grok` command
+- Changes are saved to config immediately (no restart needed)
+
+## 👥 Per-Group Rate Limits
+
+Set different rate limits for different player groups using permissions. Perfect for VIP members who deserve more requests!
+
+**Features:**
+- Permission-based (works with LuckPerms, PermissionsEx, etc.)
+- Highest limit wins (if player has multiple group permissions)
+- Falls back to default limit if no group permissions
+- Works automatically - no manual configuration needed
+
+**Configure in config.yml:**
+```yaml
+rate-limit:
+  enabled: true
+  max-requests-per-hour: 20  # Default for players without group permissions
+  groups:
+    grokchat.rate.vip: 50      # VIP players get 50/hour
+    grokchat.rate.member: 20    # Members get 20/hour
+    grokchat.rate.guest: 5      # Guests get 5/hour
+    grokchat.rate.premium: 100  # Premium players get 100/hour
+```
+
+**Setup with LuckPerms:**
+```bash
+# Give VIP players 50 requests/hour
+/lp group vip permission set grokchat.rate.vip true
+
+# Give members 20 requests/hour
+/lp group member permission set grokchat.rate.member true
+
+# Player gets the HIGHEST limit they qualify for
+# If player has both VIP (50) and Member (20), they get 50
+```
+
+**Checking Limits:**
+```
+/grokchat stats <player>
+=== Grok Stats for Player ===
+Rate Limit: 50 requests/hour    # Shows their specific limit
+Requests Used: 12/50
+Requests Remaining: 38
+```
+
 ## 🧠 Chat History Context
 
 Grok can **understand conversations** by remembering recent chat messages!
@@ -456,6 +575,8 @@ See `examples/config-custom-prompts.yml` for 12+ pre-made prompt examples!
 - [x] Auto-response in chat (natural conversation mode)
 - [x] Chat history context for better responses
 - [x] Tab completion for all commands
+- [x] Blacklist filtering system
+- [x] Per-group rate limits
 - [ ] Multi-language support
 - [ ] PlaceholderAPI integration - Allow Grok data to be used as placeholders in other plugins (e.g., `%grok_request_count%`, `%grok_cooldown%`)
 - [ ] Integration with other plugins (economy, permissions, etc.)

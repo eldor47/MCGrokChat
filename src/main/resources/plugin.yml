@@ -18,13 +18,29 @@ commands:
     aliases: [gc]
 
 permissions:
+  grokchat.*:
+    description: Grants all GrokChat permissions
+    default: false
+    children:
+      grokchat.use: true
+      grokchat.command: true
+      grokchat.admin: true
   grokchat.use:
     description: Allows players to use @grok mentions and auto-response in chat
-    default: true
+    default: false
   grokchat.command:
     description: Allows players to use /grok command
-    default: true
+    default: false
   grokchat.admin:
     description: Allows access to admin commands
     default: op
+  grokchat.rate.vip:
+    description: VIP rate limit (50 requests/hour by default, configurable in config.yml)
+    default: false
+  grokchat.rate.member:
+    description: Member rate limit (20 requests/hour by default, configurable in config.yml)
+    default: false
+  grokchat.rate.guest:
+    description: Guest rate limit (5 requests/hour by default, configurable in config.yml)
+    default: false
 
