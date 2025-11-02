@@ -88,5 +88,34 @@ public class MessageUtils {
     public static String formatInfo(String message) {
         return ChatColor.YELLOW + "ℹ " + message;
     }
+
+    /**
+     * Checks if a message contains any blacklisted words/phrases.
+     * Case-insensitive matching.
+     * 
+     * @param message The message to check
+     * @param blacklistedWords List of blacklisted words/phrases
+     * @return true if message contains any blacklisted word, false otherwise
+     */
+    public static boolean containsBlacklistedWord(String message, List<String> blacklistedWords) {
+        if (blacklistedWords == null || blacklistedWords.isEmpty()) {
+            return false;
+        }
+        
+        String messageLower = message.toLowerCase();
+        
+        for (String blockedWord : blacklistedWords) {
+            if (blockedWord == null || blockedWord.trim().isEmpty()) {
+                continue;
+            }
+            
+            // Case-insensitive partial match
+            if (messageLower.contains(blockedWord.toLowerCase())) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
 }
 

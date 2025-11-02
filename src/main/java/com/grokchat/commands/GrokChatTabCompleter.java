@@ -35,7 +35,8 @@ public class GrokChatTabCompleter implements TabCompleter {
                 "info",
                 "setkey",
                 "test",
-                "stats"
+                "stats",
+                "blacklist"
             );
             
             // Filter based on what user has typed
@@ -55,6 +56,31 @@ public class GrokChatTabCompleter implements TabCompleter {
         // /grokchat setkey <key>
         else if (args.length == 2 && args[0].equalsIgnoreCase("setkey")) {
             completions.add("<api-key>");
+        }
+        // /grokchat blacklist <subcommand>
+        else if (args.length == 2 && args[0].equalsIgnoreCase("blacklist")) {
+            List<String> blacklistSubcommands = Arrays.asList(
+                "list",
+                "add",
+                "remove",
+                "clear",
+                "enable",
+                "disable"
+            );
+            
+            String input = args[1].toLowerCase();
+            completions = blacklistSubcommands.stream()
+                .filter(sub -> sub.startsWith(input))
+                .collect(Collectors.toList());
+        }
+        // /grokchat blacklist remove <word>
+        else if (args.length == 3 && args[0].equalsIgnoreCase("blacklist") && args[1].equalsIgnoreCase("remove")) {
+            // Suggest existing blacklisted words
+            List<String> blacklistedWords = plugin.getConfigManager().getBlacklistedWords();
+            String input = args[2].toLowerCase();
+            completions = blacklistedWords.stream()
+                .filter(word -> word.toLowerCase().startsWith(input))
+                .collect(Collectors.toList());
         }
 
         return completions;
